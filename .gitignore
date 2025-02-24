@@ -1,0 +1,10 @@
+__pycache__/
+*.mid
+*.wav
+*.pyc
+*.mp3
+*.ogg
+.venv/
+.idea
+.vscode
+*.zpa
