@@ -16,7 +16,7 @@ from stft_io import read, write
 
 def beat_to_s(beat: float, tcs: list[TempoChange]) -> float:
     tcs = sorted(tcs, key=lambda s: s.beat)
-    bpm = 120  # current bpm
+    bpm = 120.0  # current bpm
     cur_time = 0.0  # time since the last tempo change
     last_tc = 0.0  # beat of the last tempo change
 
@@ -67,14 +67,14 @@ def shift_pitch(asgw: ASGW) -> ASGW:
     return ASGW(asgw.asg, AudioSegment.from_file(output_buffer, format="wav"))
 
 
-TG_TRACK = "target"
+# TG_TRACK = "target"
 
 
-def poly_slicer(midi_data: MidiRepresentation, pitch_offset: int) -> list[ASG]:
+def poly_slicer(midi_data: MidiRepresentation, pitch_offset: int, target_track: str) -> list[ASG]:
     midi_rep = midi_data
-    first_valid_track: Track = next((item for item in midi_rep.tracks.values() if item.track_name == TG_TRACK), None)
+    first_valid_track: Optional[Track] = next((item for item in midi_rep.tracks.values() if item.track_name == target_track), None)
     if first_valid_track is None:
-        raise ValueError(f"No track named {TG_TRACK}")
+        raise ValueError(f"No track named {target_track}")
 
     track_notes = sorted(first_valid_track.notes, key=lambda n: n.beat)
     audio_segments: list[ASG] = []
@@ -87,14 +87,14 @@ def poly_slicer(midi_data: MidiRepresentation, pitch_offset: int) -> list[ASG]:
     return audio_segments
 
 
-def process_internal(sound: AudioSegment, midi_data: MidiRepresentation, pitch_offset: int) -> Optional[AudioSegment]:
+def process_internal(sound: AudioSegment, midi_data: MidiRepresentation, pitch_offset: int, target_track: str) -> AudioSegment:
     # obtain the track named "target"
     first_valid_track = next((item for item in midi_data.tracks.values() if item.track_name == "target"), None)
     if first_valid_track is None:
         print("No track named target")
         return None
 
-    audio_segments = poly_slicer(midi_data, pitch_offset)
+    audio_segments = poly_slicer(midi_data, pitch_offset, target_track)
     length_in_ms = math.floor(sound.duration_seconds * 1000)
     asg_w_list: list[ASGW] = [ASGW(seg, sound[seg.b:seg.e]) for seg in audio_segments]
     pitches_applied = apply_pitch(asg_w_list)
@@ -105,7 +105,7 @@ def process_internal(sound: AudioSegment, midi_data: MidiRepresentation, pitch_o
     return new_canvas
 
 
-def process(audio: Path, midi_file: Path, pitch: int, export_path: Path) -> None:
+def process(audio: Path, midi_file: Path, pitch: int, export_path: Path, target_track: str = "target") -> None:
     format_of = audio.suffix.removeprefix(".")
     af_formats = {"wav", "mp3", "ogg", "flac"}
     if format_of not in af_formats:
@@ -115,5 +115,5 @@ def process(audio: Path, midi_file: Path, pitch: int, export_path: Path) -> None
         export_path = export_path.with_suffix(".wav")
     sound = AudioSegment.from_file(audio, format=format_of)
     midi_data = midi_to_representation(mido.MidiFile(midi_file.__str__()))
-    ad = process_internal(sound, midi_data, pitch)
+    ad = process_internal(sound, midi_data, pitch, target_track)
     ad.export(export_path.__str__(), format=exp_format)

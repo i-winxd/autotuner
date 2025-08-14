@@ -12,6 +12,8 @@ note to tune all to a single pitch.
 
 Program parameters:
 
+(cli_process.py or the downloadable executable in releases has a --target TARGET_TRACK flag if you didn't name your midi track 'target')
+
 - Input audio is your input audio
 - The input midi is the notes you want to tune it to, where all the notes must be in the track "target" (case-sensitive). In FL Studio, there is 1 track per MIDI out, the track name is what you actually named the MIDI out track.
 - Pitch is the base pitch of your input audio. This is an offset, and it should be the pitch you are hearing, **distance
