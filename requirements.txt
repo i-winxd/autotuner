@@ -18,5 +18,5 @@ requests==2.32.3
 six==1.16.0
 stftpitchshift==2.0
 urllib3==2.2.3
-
+audioop-lts; python_version>='3.13'
 pydub~=0.25.1
