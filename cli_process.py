@@ -5,6 +5,8 @@ from autotuner import process
 
 
 def main() -> None:
+    import multiprocessing
+    multiprocessing.freeze_support()
     parser = argparse.ArgumentParser(description='Autotuner. Input audio is at a constant pitch. Input MIDI has a track named target, where the input audio is tuned to. Read the README for more information.')
 
     parser.add_argument('input', type=str, help='Input audio path (wav, mp3, ogg, flac)')
