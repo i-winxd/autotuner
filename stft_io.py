@@ -8,21 +8,6 @@ import numpy as np
 
 
 def read(path: BytesIO) -> tuple[np.ndarray, int]:
-    """
-    Reads a .wav file.
-
-    Parameters
-    ----------
-    path : string
-        File path with or without the .wav extension.
-
-    Returns
-    -------
-    data : ndarray
-        Content of the .wav file.
-    sr : integer
-        Sample rate in hertz.
-    """
     with wave.open(path, 'rb') as file:
         sr = file.getframerate()
         bytes = file.getsampwidth()
@@ -47,21 +32,6 @@ def read(path: BytesIO) -> tuple[np.ndarray, int]:
 
 
 def write(path: BytesIO, data: np.ndarray, sr: int, bits: int=32) -> None:
-    """
-    Writes a .wav file.
-
-    Parameters
-    ----------
-    path : string
-        File path with or without the .wav extension.
-    data : ndarray
-        Content of the .wav file.
-    sr : integer
-        Sample rate in hertz.
-    bits : integer, optional
-        Sample bitwidth.
-    """
-
     data = numpy.asarray(data)
     assert data.dtype in [float, complex]
     assert data.ndim in [1, 2]
