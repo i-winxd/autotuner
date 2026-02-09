@@ -2,7 +2,7 @@
 
 This repository is for reference only. I may not be able to provide 101 support.
 
-Kerovee/Pitcher but not in FL Studio and it *might* sound better?
+"Anything but melodyne" - Kerovee/Pitcher but not in FL Studio and it *might* sound better?
 
 No pitch detection **so input audio must be at a constant pitch.** Otherwise, this is a
 full-on autotuner with formant preservation. In Newtone, select all and CTRL+CLICK piano
